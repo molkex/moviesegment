@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TikTok auth callback — Movie Segment Publisher</title>
+<style>
+body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:760px;margin:60px auto;padding:0 20px;line-height:1.6;color:#1a1a1a}
+h1{font-size:24px}
+.box{background:#f4f4f5;border:1px solid #ddd;border-radius:10px;padding:16px;margin:16px 0;word-break:break-all;font-family:ui-monospace,Menlo,monospace;font-size:15px}
+.label{color:#666;font-size:13px;margin-bottom:6px}
+.ok{color:#0a7d2c}.err{color:#c0392b}
+button{font-size:15px;padding:8px 16px;border-radius:8px;border:1px solid #ccc;background:#fff;cursor:pointer}
+</style>
+</head>
+<body>
+<h1>TikTok authorization</h1>
+<p id="status">Reading authorization code…</p>
+<div id="codewrap" style="display:none">
+  <div class="label">Authorization code (copy this):</div>
+  <div class="box" id="code"></div>
+  <button onclick="navigator.clipboard.writeText(document.getElementById('code').textContent)">Copy code</button>
+  <div class="label" style="margin-top:18px">state:</div>
+  <div class="box" id="state"></div>
+</div>
+<script>
+var p = new URLSearchParams(location.search);
+var code = p.get('code'), state = p.get('state'), err = p.get('error');
+var status = document.getElementById('status');
+if (code) {
+  document.getElementById('code').textContent = code;
+  document.getElementById('state').textContent = state || '(none)';
+  document.getElementById('codewrap').style.display = 'block';
+  status.innerHTML = '<span class="ok">✓ Authorized.</span> Copy the code below and paste it back to finish.';
+} else if (err) {
+  status.innerHTML = '<span class="err">Authorization failed:</span> ' + err + ' — ' + (p.get('error_description')||'');
+} else {
+  status.textContent = 'No authorization code in URL. Open this page via the TikTok consent redirect.';
+}
+</script>
+</body>
+</html>
